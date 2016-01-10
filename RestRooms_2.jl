@@ -14,7 +14,7 @@ function binary_probe(arr, k, start, offset)
 
     mid = start + offset
     
-    (a, b) = eval_partition(arr, mid, k_l, k_r, debug)
+    (a, b) = eval_partition(arr, mid, k_l, k_r)
     
     nextOffset = floor(Int, offset / 2)
     
@@ -34,23 +34,20 @@ function binary_probe(arr, k, start, offset)
     end
  
     if (nextOffset > 0)
-        score = binary_probe(arr, k, nextStart, nextOffset, debug)
+        score = binary_probe(arr, k, nextStart, nextOffset)
         if (score > bestScore)
             bestScore = score
-            if (debug)
-                selection = newSel
-            end
         end
     end
     return bestScore
 end
 
 
-function eval_partition(arr, l, k_l, k_r, debug)
+function eval_partition(arr, l, k_l, k_r)
     n = length(arr)
         
-    a = solve(arr[1:l], k_l, debug)
-    b = solve(arr[l:n], k_r, debug)
+    a = solve(arr[1:l], k_l)
+    b = solve(arr[l:n], k_r)
 
     return (a, b)
 end
