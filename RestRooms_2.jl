@@ -8,20 +8,26 @@ function solve(arr, k)
     return binary_probe(arr, k, 1, floor(Int, n / 2))
 end
 
+function split(k)
+    k_l = round(Int, k/2)
+    k_r = k + 1 - k_l
+    return (k_l, k_r)
+end
+
 function binary_probe(arr, k, start, offset)
-   
+    n = length(arr)    
     (k_l, k_r) = split(k)
 
     mid = start + offset
     
-    (a, b) = eval_partition(arr, mid, k_l, k_r)
+    a = solve(arr[1:mid], k_l)
+    b = solve(arr[mid:n], k_r)
     
     nextOffset = floor(Int, offset / 2)
     
     if (a < b) 
         bestScore = a
         nextStart = mid
-        n = length(arr)    
         if (nextStart + nextOffset > n - k_r + 1)
             nextOffset = n - k_r + 1 - nextStart
         end
@@ -42,19 +48,3 @@ function binary_probe(arr, k, start, offset)
     return bestScore
 end
 
-
-function eval_partition(arr, l, k_l, k_r)
-    n = length(arr)
-        
-    a = solve(arr[1:l], k_l)
-    b = solve(arr[l:n], k_r)
-
-    return (a, b)
-end
-
-
-function split(k)
-    k_l = round(Int, k/2)
-    k_r = k + 1 - k_l
-    return (k_l, k_r)
-end
