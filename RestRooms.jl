@@ -10,13 +10,7 @@ function solve(arr, k, debug)
         end
     end
             
-    if (debug)
-        (status, score, selection) = binary_probe(arr, k, 1, floor(Int, n / 2), debug)
-        return (score, selection)
-    else
-        (status, score) = binary_probe(arr, k, 1, floor(Int, n / 2), debug)
-        return score
-    end
+    return binary_probe(arr, k, 1, floor(Int, n / 2), debug)
 end
 
 function binary_probe(arr, k, start, offset, debug)
@@ -26,17 +20,9 @@ function binary_probe(arr, k, start, offset, debug)
     mid = start + offset
     
     if (debug)
-        (stat, a, b, selection) = eval_partition(arr, mid, k_l, k_r, debug)
+        (a, b, selection) = eval_partition(arr, mid, k_l, k_r, debug)
     else
-        (stat, a, b) = eval_partition(arr, mid, k_l, k_r, debug)
-    end
-    
-    if (!stat) 
-        if (debug)
-            return (false, 0, [])
-        else
-            return (false, 0)
-        end
+        (a, b) = eval_partition(arr, mid, k_l, k_r, debug)
     end
     
     nextOffset = floor(Int, offset / 2)
@@ -58,39 +44,27 @@ function binary_probe(arr, k, start, offset, debug)
  
     if (nextOffset > 0)
         if (debug)
-            (status, score, newSel) = binary_probe(arr, k, nextStart, nextOffset, debug)
+            (score, newSel) = binary_probe(arr, k, nextStart, nextOffset, debug)
         else
-            (status, score) = binary_probe(arr, k, nextStart, nextOffset, debug)
+            score = binary_probe(arr, k, nextStart, nextOffset, debug)
         end
-        if (status)
-            if (score > bestScore)
-                if (debug)
-                    return (true, score, newSel)
-                else
-                    return (true, score)
-                end
+        if (score > bestScore)
+            bestScore = score
+            if (debug)
+                selection = newSel
             end
         end
     end
     if (debug)
-        return (true, bestScore, selection)
+        return (bestScore, selection)
     else
-        return (true, bestScore)
+        return bestScore
     end
 end
 
 
 function eval_partition(arr, l, k_l, k_r, debug)
     n = length(arr)
-    
-    if (k_l > l || k_r > n - l + 1)
-        if (debug)
-            println("(1, $l, $k_l) and ($l, $n, $k_r) => Invalid")
-            return (false, 0, 0, [])
-        else
-            return (false, 0, 0)
-        end
-    end
         
     if (debug)
         (a, sela) = solve(arr[1:l], k_l, debug)
@@ -103,9 +77,9 @@ function eval_partition(arr, l, k_l, k_r, debug)
     if (debug)
         newSel = vcat(sela[1:(k_l-1)], selb)
         println("(1, $l, $k_l) and ($l, $n, $k_r) => ($a, $b, $newSel)")
-        return (true, a, b, newSel)
+        return (a, b, newSel)
     else
-        return (true, a, b)
+        return (a, b)
     end
 end
 
